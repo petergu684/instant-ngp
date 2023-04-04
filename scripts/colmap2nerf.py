@@ -311,10 +311,11 @@ if __name__ == "__main__":
 				continue
 			if  i % 2 == 1:
 				elems=line.split(" ") # 1-4 is quat, 5-7 is trans, 9ff is filename (9, if filename contains no spaces)
-				#name = str(PurePosixPath(Path(IMAGE_FOLDER, elems[9])))
+				name_path = PurePosixPath(Path(IMAGE_FOLDER, elems[9]))
+				name = str(name_path)
 				# why is this requireing a relitive path while using ^
-				image_rel = os.path.relpath(IMAGE_FOLDER)
-				name = str(f"./{image_rel}/{'_'.join(elems[9:])}")
+				# image_rel = os.path.relpath(IMAGE_FOLDER)
+				# name = str(f"./{image_rel}/{'_'.join(elems[9:])}")
 				b = sharpness(name)
 				print(name, "sharpness=",b)
 				image_id = int(elems[0])
@@ -332,7 +333,9 @@ if __name__ == "__main__":
 
 					up += c2w[0:3,1]
 
-				frame = {"file_path":name,"sharpness":b,"transform_matrix": c2w}
+				frame = {"file_path": str(name_path.relative_to(Path(IMAGE_FOLDER).parent)),
+	     				 "sharpness": b,
+						 "transform_matrix": c2w}
 				out["frames"].append(frame)
 	nframes = len(out["frames"])
 
